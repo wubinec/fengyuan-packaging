@@ -23,6 +23,29 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Unpack and Build Site
+        run: |
+          unzip -q -o fengyuan-packaging-slim.zip
+          cd fengyuan-packaging
+          npm ci
+          npm run build
+          mkdir -p ../dist
+          cp -r dist/* ../dist/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
